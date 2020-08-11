@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ JBoss, Home of Professional Open Source.
-  ~ Copyright 2019 Red Hat, Inc., and individual contributors
+  ~ Copyright 2012 Red Hat, Inc., and individual contributors
   ~ as indicated by the @author tags.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,13 +25,14 @@
     <parent>
         <groupId>io.undertow</groupId>
         <artifactId>undertow-parent</artifactId>
-        <version>2.1.4.MKOPECKY</version>
+        <version>2.1.4.Final-SNAPSHOT</version>
     </parent>
 
-    <artifactId>undertow-benchmarks</artifactId>
-    <version>2.1.4.MKOPECKY</version>
+    <groupId>io.undertow</groupId>
+    <artifactId>undertow-examples</artifactId>
+    <version>2.1.4.Final-SNAPSHOT</version>
 
-    <name>Undertow Benchmarks</name>
+    <name>Undertow Examples</name>
 
     <dependencies>
 
@@ -41,31 +42,40 @@
         </dependency>
 
         <dependency>
-            <groupId>org.jboss.logmanager</groupId>
-            <artifactId>jboss-logmanager</artifactId>
+            <groupId>io.undertow</groupId>
+            <artifactId>undertow-servlet</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.openjdk.jmh</groupId>
-            <artifactId>jmh-core</artifactId>
+            <groupId>io.undertow</groupId>
+            <artifactId>undertow-websockets-jsr</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.openjdk.jmh</groupId>
-            <artifactId>jmh-generator-annprocess</artifactId>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging-processor</artifactId>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <scope>compile</scope>
+            <groupId>org.jboss.xnio</groupId>
+            <artifactId>xnio-nio</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.threads</groupId>
+            <artifactId>jboss-threads</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.logmanager</groupId>
+            <artifactId>jboss-logmanager</artifactId>
         </dependency>
 
     </dependencies>
 
     <build>
-        <finalName>undertow-benchmarks</finalName>
+        <finalName>undertow-examples</finalName>
         <resources>
             <resource>
                 <directory>src/main/java</directory>
@@ -81,17 +91,6 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>org.openjdk.jmh.Main</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <executions>
                     <execution>
@@ -101,6 +100,29 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>io.undertow.examples.Runner</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <configuration>
+                    <executable>java</executable>
+                    <arguments>
+                        <argument>-jar</argument>
+                        <argument>target/${project.build.finalName}.jar</argument>
+                    </arguments>
+                </configuration>
             </plugin>
         </plugins>
     </build>
